@@ -1,62 +1,85 @@
+# Import necessary libraries
 import requests
 from sys import argv
 
-API_KEY = "Enter Your API KEY"
+# API Key for NewsAPI (replace with your actual API key)
+API_KEY = "ENTER API KEY"
 
-URL = ('https://newsapi.org/v2/top-headlines?')
+# URL for the NewsAPI's 'everything' endpoint
+URL = ('https://newsapi.org/v2/everything?')
 
+
+# Function to get articles by category
 def get_articles_by_category(category):
+    # Setting up the query parameters for the API request
     query_parameters = {
-        "Category": category,
-        "sortBy": "top",
-        "country": "gb",
-        "apiKey": API_KEY
+        "category": category,  # Category of news
+        "sortBy": "top",  # Sorting by top news
+        "apiKey": API_KEY  # API key for authentication
     }
+    # Calling the helper function to make the API request
     return _get_articles(query_parameters)
 
+
+# Function to get articles by a search query
 def get_articles_by_query(query):
+    # Setting up the query parameters for the API request
     query_parameters = {
-        "q": query,
-        "sortBy": "top",
-        "country": "gb",
-        "apiKey": API_KEY
+        "q": query,  # Search query
+        "sortBy": "top",  # Sorting by top news
+        "apiKey": API_KEY  # API key for authentication
     }
+    # Calling the helper function to make the API request
     return _get_articles(query_parameters)
 
+
+# Helper function to make the API request and process the response
 def _get_articles(params):
-    
-    # this requests at the url with the specified parameters
-    response = requests.get(URL, params=params)
+    try:
+        # Making the GET request to the API
+        response = requests.get(URL, params=params)
+        # Raising an exception for HTTP errors
+        response.raise_for_status()
+        # Parsing the JSON response
+        json_response = response.json()
+        # Extracting the 'articles' field from the response
+        articles = json_response.get('articles', [])
 
-    # This is to access the response.
-    articles = response.json()['articles']
+        # List comprehension to create a list of articles, filtering out any with '[Removed]' title
+        results = [{"title": article["title"], "url": article["url"]} for article in articles if
+                   article["title"] != '[Removed]']
 
-    # empty array of results.
-    results = []
+        # Check if the results list is empty
+        if not results:
+            print("No articles found.")
+            return
 
-    # for loop through all the articles
-    for article in articles:
-        # This appends an object to the empty array.
-        # Title key from the article object and url field.
-        # We know its formatted like this due to the response in the documentation
-        results.append({"title": article["title"], "url": article["url"]})
+        # Printing the article titles and URLs
+        for result in results:
+            print(result['title'])
+            print(result['url'])
+            print('')
 
-    for result in results:
-        print(result['title'])
-        print(result['url'])
-        print('')
+    except requests.RequestException as e:
+        # Printing any exceptions caught during the API request
+        print(f"Error fetching articles: {e}")
 
+
+# Main execution block
 if __name__ == "__main__":
+    # Check if enough arguments are provided
     if len(argv) < 2:
         print("Usage: py news_getter.py <category or query>")
         exit(1)
 
+    # Extracting the category or query from the command line arguments
     category_or_query = argv[1]
     print(f"Getting news for {category_or_query}....\n")
-    
+    # Determining whether to treat the input as a category or a query
     if " " in category_or_query:  # Check if it's a query or category
         get_articles_by_query(category_or_query)
     else:
         get_articles_by_category(category_or_query)
-    
+
+    # Indicate successful retrieval of articles
     print(f"Successfully retrieved top {category_or_query} headlines")
