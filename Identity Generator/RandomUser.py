@@ -4,6 +4,11 @@ import requests
 # Send a GET request to the randomuser.me API
 response = requests.get('https://randomuser.me/api')
 
+# To change nationality replace the URL above with
+# https://randomuser.me/api/?nat=
+# Ensure to enter your nationality end and enter your preferred nationality
+# for example 'https://randomuser.me/api/?nat=gb' for british
+
 # Extract the title, first and last name, gender, age, and date of birth from the JSON response
 title = response.json()['results'][0]['name']['title']
 first_name = response.json()['results'][0]['name']['first']
@@ -15,8 +20,8 @@ dob = response.json()['results'][0]['dob']['date']
 # Extract the phone number, email, username, and password from the JSON response
 phone = response.json()['results'][0]['phone']
 email = response.json()['results'][0]['email']
-username = response.json()['results'][0]['login']['username']
-password = response.json()['results'][0]['login']['password']
+username =  response.json()['results'][0]['login']['username']
+password =  response.json()['results'][0]['login']['password']
 
 # Print the extracted personal information
 print(f'{title}. {first_name} {last_name}, {gender}, Age: {age}, DOB: {dob}\n')
