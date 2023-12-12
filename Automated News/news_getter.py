@@ -3,7 +3,7 @@ import requests
 from sys import argv
 
 # API Key for NewsAPI (replace with your actual API key)
-API_KEY = "fbeb79b904ca43cc83b86a13698f92b9"
+API_KEY = "ENTER API KEY"
 
 # URL for the NewsAPI's 'everything' endpoint
 URL = ('https://newsapi.org/v2/everything?')
