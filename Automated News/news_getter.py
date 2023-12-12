@@ -3,7 +3,7 @@ import requests
 from sys import argv
 
 # API Key for NewsAPI (replace with your actual API key)
-API_KEY = "ENTER API KEY"
+API_KEY = "fbeb79b904ca43cc83b86a13698f92b9"
 
 # URL for the NewsAPI's 'everything' endpoint
 URL = ('https://newsapi.org/v2/everything?')
@@ -14,8 +14,9 @@ def get_articles_by_category(category):
     # Setting up the query parameters for the API request
     query_parameters = {
         "category": category,  # Category of news
-        "sortBy": "top",  # Sorting by top news
-        "apiKey": API_KEY  # API key for authentication
+        "sortBy": "top",       # Sorting by top news
+        "apiKey": API_KEY,     # API key for authentication
+        "language": "en"
     }
     # Calling the helper function to make the API request
     return _get_articles(query_parameters)
@@ -25,9 +26,10 @@ def get_articles_by_category(category):
 def get_articles_by_query(query):
     # Setting up the query parameters for the API request
     query_parameters = {
-        "q": query,  # Search query
-        "sortBy": "top",  # Sorting by top news
-        "apiKey": API_KEY  # API key for authentication
+        "q": query,         # Search query
+        "sortBy": "top",    # Sorting by top news
+        "apiKey": API_KEY,  # API key for authentication
+        "language": "en"
     }
     # Calling the helper function to make the API request
     return _get_articles(query_parameters)
