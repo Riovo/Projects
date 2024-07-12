@@ -36,6 +36,8 @@ with 20+ reviews, from paying customers that have left positive reviews of their
 
 ## Preview
 Had to compress the file to under 10MB to upload on github. Sorry for the low quality.
+
+
 https://github.com/user-attachments/assets/9f882d45-8ecf-4431-ba8b-8ff2f9dc9602
 
 ## Getting Started
