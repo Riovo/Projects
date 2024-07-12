@@ -33,6 +33,11 @@ This tool does the following.
 I wont upload the .exe file as many people do try to crack the file.
 with 20+ reviews, from paying customers that have left positive reviews of their games feeling much better and increasing their FPS.
 
+
+## Preview
+
+
+
 ## Getting Started
 
 To use the tool you'll have to contact me to receive a key to use the tool. Made for easy use for people all you have to do is create a restore point and run all.
