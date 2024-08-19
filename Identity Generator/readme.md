@@ -10,7 +10,7 @@ To use this script, no specific account creation is required, as it utilizes the
 
 No additional installation is required if you have Python and the `requests` library installed. If you don't have the `requests` library, you can install it using pip:
 
-"pip install requests
+"pip install requests"
 
 ## Usage
 
