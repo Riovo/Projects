@@ -16,6 +16,7 @@ last_name = response.json()['results'][0]['name']['last']
 gender = response.json()['results'][0]['gender']
 age = response.json()['results'][0]['dob']['age']
 dob = response.json()['results'][0]['dob']['date']
+dob_cleaned = dob[:10]
 
 # Extract the phone number, email, username, and password from the JSON response
 phone = response.json()['results'][0]['phone']
@@ -24,7 +25,7 @@ username =  response.json()['results'][0]['login']['username']
 password =  response.json()['results'][0]['login']['password']
 
 # Print the extracted personal information
-print(f'{title}. {first_name} {last_name}, {gender}, Age: {age}, DOB: {dob}\n')
+print(f'{title}. {first_name} {last_name}, {gender}, Age: {age}, DOB: {dob_cleaned}\n')
 print(f'Email: {email}, Username: {username}, Password: {password}\n')
 print(f'Phone number: {phone}')
 
@@ -37,5 +38,5 @@ country = response.json()['results'][0]['location']['country']
 postcode = response.json()['results'][0]['location']['postcode']
 
 # Print the extracted address
-print(f'Address = {number} {name_add}, City: {city}')
-print(f'State: {state}, Postcode: {postcode}, Country: {country}\n')
+print(f'Address = {number} {name_add}\nCity: {city}')
+print(f'State: {state}\nPostcode: {postcode}\nCountry: {country}\n')
