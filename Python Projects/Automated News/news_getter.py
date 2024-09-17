@@ -1,87 +1,94 @@
-# Import necessary libraries
+import tkinter as tk
+from tkinter import scrolledtext, filedialog
 import requests
-from sys import argv
 
 # API Key for NewsAPI (replace with your actual API key)
-API_KEY = "ENTER API KEY"
+API_KEY = ""
 
-# URL for the NewsAPI's 'everything' endpoint
-URL = ('https://newsapi.org/v2/everything?')
+URL = 'https://newsapi.org/v2/everything'
 
-
-# Function to get articles by category
-def get_articles_by_category(category):
-    # Setting up the query parameters for the API request
-    query_parameters = {
-        "category": category,  # Category of news
-        "sortBy": "top",       # Sorting by top news
-        "apiKey": API_KEY,     # API key for authentication
-        "language": "en"
-    }
-    # Calling the helper function to make the API request
-    return _get_articles(query_parameters)
-
-
-# Function to get articles by a search query
 def get_articles_by_query(query):
-    # Setting up the query parameters for the API request
     query_parameters = {
         "q": query,         # Search query
-        "sortBy": "top",    # Sorting by top news
         "apiKey": API_KEY,  # API key for authentication
         "language": "en"
     }
-    # Calling the helper function to make the API request
     return _get_articles(query_parameters)
 
-
-# Helper function to make the API request and process the response
 def _get_articles(params):
     try:
-        # Making the GET request to the API
         response = requests.get(URL, params=params)
-        # Raising an exception for HTTP errors
         response.raise_for_status()
-        # Parsing the JSON response
         json_response = response.json()
-        # Extracting the 'articles' field from the response
+
         articles = json_response.get('articles', [])
+        if not articles:
+            return "No articles found."
 
-        # List comprehension to create a list of articles, filtering out any with '[Removed]' title
-        results = [{"title": article["title"], "url": article["url"]} for article in articles if
-                   article["title"] != '[Removed]']
-
-        # Check if the results list is empty
-        if not results:
-            print("No articles found.")
-            return
-
-        # Printing the article titles and URLs
-        for result in results:
-            print(result['title'])
-            print(result['url'])
-            print('')
+        results = ""
+        for article in articles:
+            results += f"{article['title']}\n{article['url']}\n\n"
+        return results
 
     except requests.RequestException as e:
-        # Printing any exceptions caught during the API request
-        print(f"Error fetching articles: {e}")
+        return f"Error fetching articles: {e}"
 
+def search_news():
+    query = entry.get()
+    if not query:
+        result_text.set("Please enter a search query.")
+        return
 
-# Main execution block
-if __name__ == "__main__":
-    # Check if enough arguments are provided
-    if len(argv) < 2:
-        print("Usage: py news_getter.py <category or query>")
-        exit(1)
+    result = get_articles_by_query(query)
+    result_text.set(result)
 
-    # Extracting the category or query from the command line arguments
-    category_or_query = argv[1]
-    print(f"Getting news for {category_or_query}....\n")
-    # Determining whether to treat the input as a category or a query
-    if " " in category_or_query:  # Check if it's a query or category
-        get_articles_by_query(category_or_query)
-    else:
-        get_articles_by_category(category_or_query)
+def save_to_text():
+    result = result_text.get()
+    if not result.strip():
+        result_text.set("No results to save.")
+        return
+    
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
+    if file_path:
+        with open(file_path, "w") as file:
+            file.write(result)
+        result_text.set(f"Results saved to {file_path}")
 
-    # Indicate successful retrieval of articles
-    print(f"Successfully retrieved top {category_or_query} headlines")
+def clear_all():
+    entry.delete(0, tk.END)
+    results_display.delete(1.0, tk.END)
+    result_text.set("")
+
+root = tk.Tk()
+root.title("News Fetcher")
+root.geometry("800x600") 
+
+main_frame = tk.Frame(root, padx=20, pady=10, bg="#f0f0f0")
+main_frame.pack(fill=tk.BOTH, expand=True)
+
+label = tk.Label(main_frame, text="Enter search query:", font=("Arial", 14), bg="#f0f0f0")
+label.grid(row=0, column=0, columnspan=3, pady=(0, 10))
+
+entry = tk.Entry(main_frame, width=60, font=("Arial", 12), bg="#ffffff", borderwidth=2, relief="solid")
+entry.grid(row=1, column=0, columnspan=3, pady=(0, 10))
+
+search_button = tk.Button(main_frame, text="Search", command=search_news, font=("Arial", 12), bg="#007bff", fg="#ffffff", borderwidth=0, relief="flat")
+search_button.grid(row=2, column=0, pady=(0, 10))
+
+save_button = tk.Button(main_frame, text="Save to Text", command=save_to_text, font=("Arial", 12), bg="#28a745", fg="#ffffff", borderwidth=0, relief="flat")
+save_button.grid(row=2, column=1, padx=5, pady=(0, 10))
+
+clear_button = tk.Button(main_frame, text="Clear", command=clear_all, font=("Arial", 12), bg="#dc3545", fg="#ffffff", borderwidth=0, relief="flat")
+clear_button.grid(row=2, column=2, padx=5, pady=(0, 10))
+
+result_text = tk.StringVar()
+results_display = scrolledtext.ScrolledText(main_frame, width=80, height=20, wrap=tk.WORD, font=("Arial", 12), bg="#f9f9f9", borderwidth=2, relief="solid")
+results_display.grid(row=3, column=0, columnspan=3, pady=10)
+
+def update_results():
+    results_display.delete(1.0, tk.END)
+    results_display.insert(tk.END, result_text.get())
+
+result_text.trace("w", lambda name, index, mode: update_results())
+
+root.mainloop()
