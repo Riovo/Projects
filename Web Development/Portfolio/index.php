@@ -338,7 +338,7 @@ if (isset($_POST['send'])) {
                </div>
 
                <div class="projects__buttons">
-                  <a href="#" target="_blank" class="projects__link">
+                  <a href="https://github.com/Riovo/Projects/tree/main/Python%20Projects/Automated%20News" target="_blank" class="projects__link">
                      <i class="ri-github-line"></i> View
                   </a>
                </div>
